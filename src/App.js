@@ -6,7 +6,6 @@ import zhCN from 'antd/locale/zh_CN'; // 中文
 // import { Button, Flex } from 'antd';
 import routes from './routes/index';
 import { Suspense } from 'react';
-// import axios from 'axios';
 
 function AppRoutes() {
     const element = useRoutes(routes);
