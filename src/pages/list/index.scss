@@ -1,0 +1,23 @@
+.user-list {
+  height: 100%;
+  width: 100%;
+  .query-button {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .margin-top-12 {
+    margin-top: 12px;
+  }
+  .ant-table-placeholder {
+    height: 100% !important;
+    min-height: 300px; /* 最小高度 */
+  }
+  
+  .ant-empty {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}

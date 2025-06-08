@@ -46,9 +46,11 @@ service.interceptors.response.use(
         const res = response.data;
 
         // 处理登录过期
-        if (res.message === '登录已过期') {
+        if (res.resultMsg === '登录已过期') {
             handleLoginTimeout();
-            return Promise.reject(new Error(res.message || '登录已过期'));
+            message.error(res.resultMsg || '登录已过期');
+            // return Promise.reject(new Error(res.resultMsg || '登录已过期'));
+            return;
         }
 
         // 成功状态码（根据你的后端规范调整）
@@ -60,7 +62,9 @@ service.interceptors.response.use(
         const code = res.code || res.status;
         if (code === 401 || code === 402) {
             handleLoginTimeout();
-            return Promise.reject(new Error(res.message || '会话过期'));
+            message.error(res.resultMsg || '会话过期');
+            return;
+            // return Promise.reject(new Error(res.resultMsg || '会话过期'));
         }
 
         // 其他错误
@@ -73,18 +77,19 @@ service.interceptors.response.use(
             switch (status) {
                 case 401:
                     handleLoginTimeout();
-                    return Promise.reject(new Error('请重新登录')); // 阻止继续传播原始错误
+                    break;
+                    // return Promise.reject(new Error('请重新登录')); // 阻止继续传播原始错误
                 case 500:
                     message.error('服务器内部错误');
                     break;
                 default:
-                    message.error(`请求错误: ${error.response.status}`);
+                    message.error(`请求错误: ${error.response.data.resultMsg}`);
             }
         } else {
             message.error('网络连接异常');
         }
 
-        return Promise.reject(error);
+        // return Promise.reject(error);
     }
 );
 

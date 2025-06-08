@@ -11,6 +11,7 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'dist'),
             filename: 'bundle.[contenthash].js',
             clean: true, // 自动清理 dist 文件夹
+            publicPath: '/',
         },
         module: {
             rules: [
@@ -19,26 +20,6 @@ module.exports = (env, argv) => {
                     exclude: /node_modules/,
                     use: 'babel-loader',
                 },
-                // {
-                //     test: /\.module\.s[ac]ss$/,
-                //     use: [
-                //         'style-loader',
-                //         {
-                //             loader: 'css-loader',
-                //             options: {
-                //                 modules: {
-                //                     localIdentName: '[name]__[local]--[hash:base64:5]',
-                //                 },
-                //             },
-                //         },
-                //         {
-                //             loader: 'sass-loader',
-                //             options: {
-                //                 implementation: require('sass'), // 明确指定 Sass 实现
-                //             },
-                //         },
-                //     ],
-                // },
                 {
                     test: /\.s[ac]ss$/,
                     exclude: /\.module\.s[ac]ss$/,

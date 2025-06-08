@@ -1,35 +1,26 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
-import { loginF } from "@/features/auth/api";
-import { setToken } from "@/utils/auth";
+import { registerF } from "@/features/auth/api";
 import { useNavigate } from "react-router-dom";
 import "./index.scss";
 
-export default function Login() {
+function Register() {
   const navigate = useNavigate();
-  const onFinish = ({ username, password }) => {
-    loginF({ username, password }).then(({ code, data, resultMsg }) => {
+  const onRegister = ({ username, password }) => {
+    registerF({ username, password }).then(({ code, data, resultMsg }) => {
       if (code === 0) {
-        setToken(data);
         message.success({
           content: resultMsg,
         });
-        navigate("/");
-      } else {
-        message.error({
-          content: resultMsg,
-        });
+        navigate("/login");
       }
     });
   };
-  const onRegister = () => {
-    // 跳转到注册页面
-    window.location.href = "/register";
-  };
+
   return (
-    <div className="login">
-      <h1>登录</h1>
-      <Form onFinish={onFinish} className="login-form">
+    <div className="register">
+      <h1>注册</h1>
+      <Form className="register-form" onFinish={onRegister}>
         <Form.Item name="username" rules={[{ required: true }]}>
           <Input prefix={<UserOutlined />} placeholder="用户名" />
         </Form.Item>
@@ -38,15 +29,12 @@ export default function Login() {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" block autoInsertSpace>
-            登录
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" onClick={onRegister} block autoInsertSpace>
-            去注册
+            确定
           </Button>
         </Form.Item>
       </Form>
     </div>
   );
 }
+
+export default Register;
