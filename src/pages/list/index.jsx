@@ -13,17 +13,30 @@ import {
 } from "antd";
 import "./index.scss";
 import dayjs from "../../utils/day";
-import { getUserInfoF } from "@/features/auth/api";
+import {
+  getUserInfoF,
+  newAddUserF,
+  editUserF,
+  delUserF,
+} from "@/features/auth/api";
+import UserInfoModal from "./components/userInfoModal/index";
 
 const { RangePicker } = DatePicker;
 
 function List() {
   const containerRef = useRef(null);
   const [form] = Form.useForm();
+  const userName = Form.useWatch("username", form);
+  const password = Form.useWatch("password", form);
+  const time = Form.useWatch("password", form);
   const [loading, setLoading] = useState(false);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [tableHeight, setTableHeight] = useState(0);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [dataSource, setDataSource] = useState([]);
+  const [userInfoModalVisible, setUserInfoModalVisible] = useState(false);
+  const [editData, setEditData] = useState(null);
 
   const columns = [
     {
@@ -46,44 +59,115 @@ function List() {
       key: "action",
       render: (_, record) => (
         <Space size="middle">
-          <Button type="link" size="small">
+          <Button type="link" size="small" onClick={() => editF(record)}>
             编辑
           </Button>
-          <Button type="link" size="small">
+          <Button type="link" size="small" onClick={() => deleteF(record)}>
             删除
           </Button>
         </Space>
       ),
     },
   ];
-  const onChange = (page, pageSize) => {
-    console.log(page, pageSize);
+  const editF = (val) => {
+    setEditData(val);
+    setUserInfoModalVisible(true);
   };
-  const onFinish = ({ username, password, time }) => {
+  const deleteF = (val) => {
+    delUserF({ id: val.id }).then(({ code, data, resultMsg }) => {
+      if (code === 0) {
+        message.success({
+          content: resultMsg,
+        });
+        setLoading(true);
+        queryUserInfo();
+      } else {
+        message.error({
+          content: resultMsg,
+        });
+      }
+    });
+  };
+  const onChange = (page, pageSize) => {
+    setPageIndex(page);
+    setPageSize(pageSize);
+    queryUserInfo(page, pageSize);
+  };
+  const onQuery = () => {
     setLoading(true);
+    setPageIndex(1);
+    queryUserInfo();
+  };
+  const queryUserInfo = (
+    currentPage = pageIndex,
+    currentPageSize = pageSize
+  ) => {
     let startDate, endDate;
     if (time) {
       startDate = dayjs(time[0]).format("YYYY-MM-DD HH:mm:ss");
       endDate = dayjs(time[1]).format("YYYY-MM-DD HH:mm:ss");
     }
-    getUserInfoF({ username, password, startDate, endDate }).then(
-      ({ code, data, resultMsg }) => {
-        setLoading(false);
+    getUserInfoF({
+      username: userName,
+      password,
+      pageSize: currentPageSize,
+      pageIndex: currentPage,
+      startDate,
+      endDate,
+    }).then(({ code, data, resultMsg }) => {
+      setLoading(false);
+      if (code === 0) {
+        setDataSource(data.list);
+        setTotal(data.total);
+      } else {
+        setDataSource([]);
+        setTotal(0);
+        message.error({
+          content: resultMsg,
+        });
+      }
+    });
+  };
+  const newAddF = () => {
+    setEditData(null);
+    setUserInfoModalVisible(true);
+  };
+  const handleModalClose = (val) => {
+    if (!val) {
+      setUserInfoModalVisible(false);
+      return;
+    }
+    if (!val.id) {
+      newAddUserF(val).then(({ code, data, resultMsg }) => {
         if (code === 0) {
-          setDataSource(data.list);
-          setTotal(data.total);
+          setUserInfoModalVisible(false);
+          message.success({
+            content: resultMsg,
+          });
+          setLoading(true);
+          queryUserInfo();
         } else {
-          setDataSource([]);
-          setTotal(0);
           message.error({
             content: resultMsg,
           });
         }
-      }
-    );
-  };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+      });
+    } else {
+      editUserF(val).then(({ code, data, resultMsg }) => {
+        if (code === 0) {
+          setUserInfoModalVisible(false);
+          message.success({
+            content: resultMsg,
+          });
+          setLoading(true);
+          queryUserInfo();
+        } else {
+          message.error({
+            content: resultMsg,
+          });
+        }
+      });
+    }
   };
 
   useEffect(() => {
@@ -98,12 +182,7 @@ function List() {
           containerRef.current.clientHeight -
           formHeight -
           paginationHeight -
-          36; // 减去边距
-        const tableHeadHeight =
-          containerRef.current.querySelector(".ant-table-header")
-            ?.clientHeight || 0;
-        containerRef.current.querySelector(".ant-empty").style.height =
-          height - tableHeadHeight - 82 + "px";
+          54;
         setTableHeight(height);
       }
     };
@@ -118,8 +197,7 @@ function List() {
         form={form}
         initialValues={{ layout: "inline" }}
         variant={"outlined"}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+        onFinish={onQuery}
       >
         <Row gutter={24}>
           <Col span={6}>
@@ -153,6 +231,13 @@ function List() {
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
+              <Button
+                type="primary"
+                onClick={newAddF}
+                className="margin-left-12"
+              >
+                新增
+              </Button>
             </Form.Item>
           </Col>
         </Row>
@@ -161,13 +246,13 @@ function List() {
         dataSource={dataSource}
         columns={columns}
         size="small"
-        bordered
         loading={loading}
         pagination={false}
         sticky
         rowKey="id"
-        style={{ height: tableHeight }}
         scroll={{ y: tableHeight }}
+        style={{ height: "100%" }}
+        className="table__height"
       />
 
       <Pagination
@@ -177,7 +262,17 @@ function List() {
         pageSizeOptions={[10, 20, 50, 100]}
         className="margin-top-12"
         align="end"
+        pageSize={pageSize}
+        current={pageIndex}
+        showSizeChanger
+        showTotal={(total) => `共 ${total} 条`}
       />
+
+      <UserInfoModal
+        visible={userInfoModalVisible}
+        onClose={handleModalClose}
+        initialValues={editData}
+      ></UserInfoModal>
     </div>
   );
 }

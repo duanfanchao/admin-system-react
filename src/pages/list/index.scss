@@ -1,6 +1,9 @@
 .user-list {
   height: 100%;
   width: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
   .query-button {
     display: flex;
     flex-direction: row-reverse;
@@ -8,16 +11,20 @@
   .margin-top-12 {
     margin-top: 12px;
   }
-  .ant-table-placeholder {
-    height: 100% !important;
-    min-height: 300px; /* 最小高度 */
+  .margin-left-12 {
+    margin-left: 12px;
   }
-  
-  .ant-empty {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  .table__height {
+    flex: 1;
+  }
+  .ant-pagination {
+    flex-shrink: 0;
+  }
+  .ant-form {
+    flex-shrink: 0;
+  }
+  .ant-table-tbody {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
   }
 }

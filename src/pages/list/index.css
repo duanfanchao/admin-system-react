@@ -1,7 +1,9 @@
-@charset "UTF-8";
 .user-list {
   height: 100%;
   width: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
 }
 
 .user-list .query-button {
@@ -13,16 +15,23 @@
   margin-top: 12px;
 }
 
-.user-list .ant-table-placeholder {
-  height: 100% !important;
-  min-height: 300px;
-  /* 最小高度 */
+.user-list .margin-left-12 {
+  margin-left: 12px;
 }
 
-.user-list .ant-empty {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.user-list .table__height {
+  flex: 1;
+}
+
+.user-list .ant-pagination {
+  flex-shrink: 0;
+}
+
+.user-list .ant-form {
+  flex-shrink: 0;
+}
+
+.user-list .ant-table-tbody {
+  scrollbar-width: auto;
+  scrollbar-color: auto;
 }
