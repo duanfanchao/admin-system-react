@@ -24,6 +24,9 @@ const UserAction = lazy(() =>
 const Mechanism = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/mechanism/index")
 );
+const PageRefresh = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/pageRefresh/index")
+);
 
 const routes = [
   {
@@ -68,6 +71,12 @@ const routes = [
             element: <Mechanism />,
             name: "脱围机制",
             icon: "BoxPlotOutlined",
+          },
+          {
+            path: "pageRefresh",
+            element: <PageRefresh />,
+            name: "页面重新渲染",
+            icon: "ContainerOutlined",
           },
         ],
       },
