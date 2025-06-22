@@ -25,7 +25,7 @@ const Mechanism = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/mechanism/index")
 );
 const PageRefresh = lazy(() =>
-  import(/* webpackPrefetch: true */ "../pages/pageRefresh/index")
+  import(/* webpackPrefetch: true */ "../pages/page-refresh/index")
 );
 
 const routes = [
