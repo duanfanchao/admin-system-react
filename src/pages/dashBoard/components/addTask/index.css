@@ -1,0 +1,9 @@
+.add-task {
+  display: flex;
+  align-items: center;
+  width: 400px;
+}
+
+.add-task .margin-left-4 {
+  margin-left: 4px;
+}

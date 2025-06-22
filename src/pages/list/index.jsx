@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Button,
   message,
@@ -26,12 +26,12 @@ const { RangePicker } = DatePicker;
 function List() {
   const containerRef = useRef(null);
   const [form] = Form.useForm();
-  const userName = Form.useWatch("username", form);
-  const password = Form.useWatch("password", form);
-  const time = Form.useWatch("password", form);
+  const formValues = Form.useWatch([], form);
+  const { username, password, time } = formValues || {};
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [tableHeight, setTableHeight] = useState(0);
+  const [dataHeight, setDataHeight] = useState(0);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [dataSource, setDataSource] = useState([]);
@@ -96,24 +96,16 @@ function List() {
   const onQuery = () => {
     setLoading(true);
     setPageIndex(1);
-    queryUserInfo();
+    queryUserInfo(1, pageSize);
   };
   const queryUserInfo = (
     currentPage = pageIndex,
     currentPageSize = pageSize
   ) => {
-    let startDate, endDate;
-    if (time) {
-      startDate = dayjs(time[0]).format("YYYY-MM-DD HH:mm:ss");
-      endDate = dayjs(time[1]).format("YYYY-MM-DD HH:mm:ss");
-    }
     getUserInfoF({
-      username: userName,
-      password,
+      ...queryParams,
       pageSize: currentPageSize,
       pageIndex: currentPage,
-      startDate,
-      endDate,
     }).then(({ code, data, resultMsg }) => {
       setLoading(false);
       if (code === 0) {
@@ -128,6 +120,23 @@ function List() {
       }
     });
   };
+  const queryParams = useMemo(() => {
+    let startDate, endDate;
+    if (time) {
+      startDate = dayjs(time[0]).format("YYYY-MM-DD HH:mm:ss");
+      endDate = dayjs(time[1]).format("YYYY-MM-DD HH:mm:ss");
+    }
+
+    return {
+      username,
+      password,
+      pageSize,
+      pageIndex,
+      startDate,
+      endDate,
+    };
+  }, [username, password, time, pageSize, pageIndex]);
+
   const newAddF = () => {
     setEditData(null);
     setUserInfoModalVisible(true);
@@ -183,14 +192,18 @@ function List() {
           formHeight -
           paginationHeight -
           54;
+        const tableHeadeHeight =
+          document.querySelector(".ant-table-header")?.offsetHeight || 0;
+        const _dataHeight = tableHeadeHeight * dataSource.length;
         setTableHeight(height);
+        setDataHeight(_dataHeight);
       }
     };
 
     updateHeight();
     window.addEventListener("resize", updateHeight);
     return () => window.removeEventListener("resize", updateHeight);
-  }, []);
+  }, [dataSource]);
   return (
     <div className="user-list" ref={containerRef}>
       <Form
@@ -250,7 +263,7 @@ function List() {
         pagination={false}
         sticky
         rowKey="id"
-        scroll={{ y: tableHeight }}
+        scroll={{ y: dataHeight > tableHeight ? tableHeight : null }}
         style={{ height: "100%" }}
         className="table__height"
       />

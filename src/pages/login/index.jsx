@@ -30,10 +30,10 @@ export default function Login() {
     <div className="login">
       <h1>登录</h1>
       <Form onFinish={onFinish} className="login-form">
-        <Form.Item name="username" rules={[{ required: true }]}>
+        <Form.Item name="username" rules={[{ required: true, message: '请输入用户名!' }]}>
           <Input prefix={<UserOutlined />} placeholder="用户名" />
         </Form.Item>
-        <Form.Item name="password" rules={[{ required: true }]}>
+        <Form.Item name="password" rules={[{ required: true, message: '请输入密码!' }]}>
           <Input.Password prefix={<LockOutlined />} placeholder="密码" />
         </Form.Item>
         <Form.Item>

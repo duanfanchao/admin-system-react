@@ -21,7 +21,7 @@ service.interceptors.request.use(
         // 如果存在token，则添加到请求头
         const token = getToken();
         if (token) {
-            config.headers['token'] = token;
+            config.headers['token'] = `Bearer ${token}`;;
         }
 
         // 非GET请求且存在data时，处理数据
@@ -48,9 +48,7 @@ service.interceptors.response.use(
         // 处理登录过期
         if (res.resultMsg === '登录已过期') {
             handleLoginTimeout();
-            message.error(res.resultMsg || '登录已过期');
-            // return Promise.reject(new Error(res.resultMsg || '登录已过期'));
-            return;
+            return Promise.reject(new Error(res.resultMsg || '登录已过期'));
         }
 
         // 成功状态码（根据你的后端规范调整）
@@ -64,7 +62,6 @@ service.interceptors.response.use(
             handleLoginTimeout();
             message.error(res.resultMsg || '会话过期');
             return;
-            // return Promise.reject(new Error(res.resultMsg || '会话过期'));
         }
 
         // 其他错误
@@ -74,22 +71,15 @@ service.interceptors.response.use(
         // 网络或服务器错误处理
         if (error.response) {
             const status = error.response.status;
-            switch (status) {
-                case 401:
-                    handleLoginTimeout();
-                    break;
-                    // return Promise.reject(new Error('请重新登录')); // 阻止继续传播原始错误
-                case 500:
-                    message.error('服务器内部错误');
-                    break;
-                default:
-                    message.error(`请求错误: ${error.response.data.resultMsg}`);
+            if (status === 401) {
+                handleLoginTimeout();
+                return Promise.reject(new Error(error.response.data.resultMsg));
+            } else if (status === 500) {
+                return Promise.reject(new Error(error.response.data.resultMsg)); 
             }
         } else {
             message.error('网络连接异常');
         }
-
-        // return Promise.reject(error);
     }
 );
 
@@ -102,11 +92,6 @@ function handleLoginTimeout() {
             window.location.replace(`/login?from=${encodeURIComponent(window.location.pathname)}`);
         }
     }, 0);
-    // message.error('登录已过期，请重新登录');
-    // 跳转到登录页（根据你的路由库调整）
-    // window.location.href = '/login';
-    // 或者使用react-router: 
-    // history.push('/login');
 }
 
 /**

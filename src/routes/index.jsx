@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import BasicLayout from "../layouts/BasicLayout";
-import PrivateRoute from '../components/privateRoute/index';
+import PrivateRoute from "../components/privateRoute/index";
 
 const Login = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/login/index")
@@ -20,6 +20,9 @@ const UserList = lazy(() =>
 );
 const UserAction = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/userAction/index")
+);
+const Mechanism = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/mechanism/index")
 );
 
 const routes = [
@@ -60,12 +63,18 @@ const routes = [
               },
             ],
           },
+          {
+            path: "mechanism",
+            element: <Mechanism />,
+            name: "脱围机制",
+            icon: "BoxPlotOutlined",
+          },
         ],
       },
     ],
   },
 
-//   { path: "/login", element: <Login /> },
+  //   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "*", element: <NotFound /> },
 ];

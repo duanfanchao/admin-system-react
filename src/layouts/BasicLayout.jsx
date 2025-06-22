@@ -64,7 +64,7 @@ export default function BasicLayout() {
       >
         <div className="logo_div">
           <img src={logo} alt="" className="login_img" />
-          {collapsed ? "" : "reactSystem"}
+          {collapsed ? "" : "vueSystem"}
         </div>
         <Menu
           theme="dark"
@@ -78,11 +78,7 @@ export default function BasicLayout() {
       <Layout>
         <Header
           style={{
-            padding: 0,
             background: colorBgContainer,
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "center",
           }}
         >
           <Button

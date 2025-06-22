@@ -1,0 +1,29 @@
+.user-action {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.user-action .form_div {
+  height: 54px;
+  width: 100%;
+  background-color: #ebebeb;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.user-action .pagination_div {
+  height: 180px;
+  width: 100%;
+  margin-top: 16px;
+  background-color: bisque;
+  flex-shrink: 0;
+}
+
+.user-action .middle-table {
+  flex: 1;
+  overflow: hidden;
+  height: calc(100% - 54px - 180px - 32px);
+}

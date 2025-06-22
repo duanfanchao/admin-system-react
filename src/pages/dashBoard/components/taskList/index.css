@@ -1,0 +1,21 @@
+.task-list {
+  width: 400px;
+  height: 200px;
+  margin-top: 16px;
+  overflow: auto;
+}
+
+.task-list .item-row {
+  display: flex;
+  align-items: center;
+  width: 400px;
+  margin-bottom: 8px;
+}
+
+.task-list .item-row:last-child {
+  margin-bottom: 0;
+}
+
+.task-list .item-row .margin-0-4 {
+  margin: 0 4px;
+}

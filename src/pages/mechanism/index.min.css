@@ -1,0 +1,1 @@
+.mouse-container{height:300px;width:800px;border:1px solid #eee;cursor:pointer;position:relative;overflow:hidden}.mouse-container .circle{height:4px;width:4px;background-color:red;position:absolute;border-radius:50%;transform:translate(-50%, -50%)}
