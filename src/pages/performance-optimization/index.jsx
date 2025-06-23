@@ -25,6 +25,9 @@ function PerformanceOptimization({ props }) {
   };
 
   // 8.useCallback
+  //   const handleClick = () => {
+  //     console.log("handleClick", userId);
+  //   };
   const handleClick = useCallback(() => {
     console.log("handleClick", userId);
   }, [userId]);
