@@ -27,6 +27,9 @@ const Mechanism = lazy(() =>
 const PageRefresh = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/page-refresh/index")
 );
+const PerformanceOptimization = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/performance-optimization/index")
+);
 
 const routes = [
   {
@@ -77,6 +80,12 @@ const routes = [
             element: <PageRefresh />,
             name: "页面重新渲染",
             icon: "ContainerOutlined",
+          },
+          {
+            path: "performanceOptimization",
+            element: <PerformanceOptimization />,
+            name: "性能优化",
+            icon: "DashboardOutlined",
           },
         ],
       },
