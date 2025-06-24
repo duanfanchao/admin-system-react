@@ -33,6 +33,9 @@ const PerformanceOptimization = lazy(() =>
 const CustomHook = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/custom-hook/index")
 );
+const DevelopmentStandard = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/development-standard/index")
+);
 
 const routes = [
   {
@@ -94,6 +97,12 @@ const routes = [
             path: "customHook",
             element: <CustomHook />,
             name: "自定义hook",
+            icon: "DashboardOutlined",
+          },
+          {
+            path: "developmentStandard",
+            element: <DevelopmentStandard />,
+            name: "开发规范",
             icon: "DashboardOutlined",
           },
         ],
