@@ -76,6 +76,8 @@ service.interceptors.response.use(
                 return Promise.reject(new Error(error.response.data.resultMsg));
             } else if (status === 500) {
                 return Promise.reject(new Error(error.response.data.resultMsg)); 
+            } else if (status === 504) {
+                return Promise.reject(new Error('服务端异常'));
             }
         } else {
             message.error('网络连接异常');

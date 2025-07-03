@@ -20,6 +20,7 @@ import {
   delUserF,
 } from "@/features/auth/api";
 import UserInfoModal from "./components/userInfoModal/index";
+import useTableScrollHeight from "../../hooks/useTableScrollHeight";
 
 const { RangePicker } = DatePicker;
 
@@ -30,13 +31,17 @@ function List() {
   const { username, password, time } = formValues || {};
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
-  const [tableHeight, setTableHeight] = useState(0);
-  const [dataHeight, setDataHeight] = useState(0);
   const [pageIndex, setPageIndex] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [dataSource, setDataSource] = useState([]);
   const [userInfoModalVisible, setUserInfoModalVisible] = useState(false);
   const [editData, setEditData] = useState(null);
+  const tableCustomHeight = useTableScrollHeight(
+    dataSource,
+    "user-list",
+    "user-list-form",
+    "margin-top-12"
+  );
 
   const columns = [
     {
@@ -178,32 +183,6 @@ function List() {
       });
     }
   };
-
-  useEffect(() => {
-    const updateHeight = () => {
-      if (containerRef.current) {
-        const formHeight =
-          containerRef.current.querySelector(".ant-form")?.clientHeight || 0;
-        const paginationHeight =
-          containerRef.current.querySelector(".ant-pagination")?.clientHeight ||
-          0;
-        const height =
-          containerRef.current.clientHeight -
-          formHeight -
-          paginationHeight -
-          54;
-        const tableHeadeHeight =
-          document.querySelector(".ant-table-header")?.offsetHeight || 0;
-        const _dataHeight = tableHeadeHeight * dataSource.length;
-        setTableHeight(height);
-        setDataHeight(_dataHeight);
-      }
-    };
-
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, [dataSource]);
   return (
     <div className="user-list" ref={containerRef}>
       <Form
@@ -211,6 +190,7 @@ function List() {
         initialValues={{ layout: "inline" }}
         variant={"outlined"}
         onFinish={onQuery}
+        className="user-list-form"
       >
         <Row gutter={24}>
           <Col span={6}>
@@ -263,7 +243,7 @@ function List() {
         pagination={false}
         sticky
         rowKey="id"
-        scroll={{ y: dataHeight > tableHeight ? tableHeight : null }}
+        scroll={{ y: tableCustomHeight }}
         style={{ height: "100%" }}
         className="table__height"
       />

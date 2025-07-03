@@ -64,7 +64,7 @@ export default function BasicLayout() {
       >
         <div className="logo_div">
           <img src={logo} alt="" className="login_img" />
-          {collapsed ? "" : "vueSystem"}
+          {collapsed ? "" : "reactSystem"}
         </div>
         <Menu
           theme="dark"

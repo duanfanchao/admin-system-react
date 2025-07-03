@@ -36,6 +36,12 @@ const CustomHook = lazy(() =>
 const DevelopmentStandard = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/development-standard/index")
 );
+const OrganizationTreeManage = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/organization-tree-manage/index")
+);
+const TestTableHeight = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/test-table-height/index")
+);
 
 const routes = [
   {
@@ -76,6 +82,12 @@ const routes = [
             ],
           },
           {
+            path: "organizationTreeManage",
+            element: <OrganizationTreeManage />,
+            name: "组织架构管理",
+            icon: "LineChartOutlined",
+          },
+          {
             path: "mechanism",
             element: <Mechanism />,
             name: "脱围机制",
@@ -103,6 +115,12 @@ const routes = [
             path: "developmentStandard",
             element: <DevelopmentStandard />,
             name: "开发规范",
+            icon: "DashboardOutlined",
+          },
+          {
+            path: "testTableHeight",
+            element: <TestTableHeight />,
+            name: "测试表格高度",
             icon: "DashboardOutlined",
           },
         ],
