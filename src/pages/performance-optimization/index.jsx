@@ -2,10 +2,10 @@ import { useState, useMemo, useCallback, useTransition } from "react";
 import { Button, Divider } from "antd";
 import ReactMemo from "./components/react-memo/index";
 
-function PerformanceOptimization({ props }) {
+function PerformanceOptimization() {
   // 6.React.memo
   const [count, setCount] = useState(0);
-  const addF = () => setCount(count + 1);
+  const addF = useCallback(() => setCount(count + 1), [count]);
   const [userId, setUserId] = useState("1");
 
   // 7.useMemo
@@ -20,9 +20,9 @@ function PerformanceOptimization({ props }) {
   const [value, setValue] = useState(0);
   // 缓存num值
   const num = useMemo(() => calculateCount(value), [value]);
-  const changeValue = () => {
+  const changeValue = useCallback(() => {
     setValue(value + 1);
-  };
+  }, [value]);
 
   // 8.useCallback
   //   const handleClick = () => {

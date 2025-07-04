@@ -28,7 +28,7 @@ function List() {
   const containerRef = useRef(null);
   const [form] = Form.useForm();
   const formValues = Form.useWatch([], form);
-  const { username, password, time } = formValues || {};
+  const { username, department, time } = formValues || {};
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
   const [pageIndex, setPageIndex] = useState(1);
@@ -50,9 +50,9 @@ function List() {
       key: "name",
     },
     {
-      title: "密码",
-      dataIndex: "password",
-      key: "password",
+      title: "部门名称",
+      dataIndex: "departmentName",
+      key: "departmentName",
     },
     {
       title: "日期",
@@ -134,13 +134,13 @@ function List() {
 
     return {
       username,
-      password,
+      department,
       pageSize,
       pageIndex,
       startDate,
       endDate,
     };
-  }, [username, password, time, pageSize, pageIndex]);
+  }, [username, department, time, pageSize, pageIndex]);
 
   const newAddF = () => {
     setEditData(null);
@@ -203,7 +203,7 @@ function List() {
             </Form.Item>
           </Col>
           <Col span={6}>
-            <Form.Item label="密码" name="password">
+            <Form.Item label="部门名称" name="department">
               <Input
                 style={{ width: "100%" }}
                 placeholder="请输入"

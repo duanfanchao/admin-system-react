@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from "react";
-import { Form, Modal, Input } from "antd";
+import { Form, Modal, Input, Select } from "antd";
 import {
   checkPassword,
   validateNewPassword,
   validateConfirmPassword,
 } from "../../../../utils/formValidate";
+import { getOrganizationTreeLevelDataF } from "@/features/organizationTree/api";
 import "./index.scss";
 
 function UserInfoModal({ visible, onClose, initialValues }) {
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
-
+  const [departmentData, setDepartmentData] = useState([]);
+  const getDepartmentData = () => {
+    getOrganizationTreeLevelDataF().then(({ code, data, resultMsg }) => {
+      if (code === 0) {
+        const { thirdLevel } = data;
+        setDepartmentData(thirdLevel);
+      }
+    });
+  };
   const onOk = async () => {
     try {
       setConfirmLoading(true);
       // 验证表单
       const values = await form.validateFields();
+      const departmentInfo = departmentData.find(
+        (ele) => ele.id === values.departmentId
+      );
       onClose(
         initialValues
-          ? { ...values, id: initialValues.id, password: values.newPassword }
-          : values
+          ? {
+              ...values,
+              id: initialValues.id,
+              password: values.newPassword,
+              departmentName: departmentInfo.name,
+            }
+          : { ...values, departmentName: departmentInfo.name }
       );
     } catch (error) {
       console.log("验证失败:", error);
@@ -31,10 +48,13 @@ function UserInfoModal({ visible, onClose, initialValues }) {
 
   useEffect(() => {
     if (visible) {
+      getDepartmentData();
       initialValues
         ? form.setFieldsValue({
             ...initialValues,
             username: initialValues.name,
+            newPassword: null,
+            confirmPassword: null,
           })
         : form.resetFields();
     }
@@ -114,12 +134,33 @@ function UserInfoModal({ visible, onClose, initialValues }) {
         wrapperCol={{ span: 16 }}
       >
         <Form.Item
+          label="部门"
+          name="departmentId"
+          validateTrigger={["onBlur"]}
+          rules={[{ required: true, message: "请选择部门!" }]}
+        >
+          <Select
+            options={departmentData}
+            style={{ width: "100%" }}
+            placeholder="请选择部门s"
+            fieldNames={{
+              label: "name",
+              value: "id",
+            }}
+          />
+        </Form.Item>
+        <Form.Item
           label="用户名"
           name="username"
           validateTrigger={["onBlur"]}
           rules={[{ required: true, message: "请输入用户名!" }]}
         >
-          <Input style={{ width: "100%" }} placeholder="请输入" allowClear />
+          <Input
+            id={initialValues ? "edit-username" : "create-username"}
+            style={{ width: "100%" }}
+            placeholder="请输入用户名"
+            allowClear
+          />
         </Form.Item>
         {renderPasswordFields()}
       </Form>
