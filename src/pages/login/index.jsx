@@ -10,9 +10,7 @@ export default function Login() {
   const onFinish = ({ username, password }) => {
     loginF({ username, password }).then(({ code, data, resultMsg }) => {
       if (code === 0) {
-        const { accessToken, refreshToken} = data;
-        setToken(accessToken);
-        // setToken(refreshToken);
+        setToken(data);
         message.success({
           content: resultMsg,
         });
