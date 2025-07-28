@@ -42,6 +42,9 @@ const OrganizationTreeManage = lazy(() =>
 const TestTableHeight = lazy(() =>
   import(/* webpackPrefetch: true */ "../pages/test-table-height/index")
 );
+const DataBoard = lazy(() =>
+  import(/* webpackPrefetch: true */ "../pages/data-board/index")
+);
 
 const routes = [
   {
@@ -85,6 +88,12 @@ const routes = [
             path: "organizationTreeManage",
             element: <OrganizationTreeManage />,
             name: "组织架构管理",
+            icon: "LineChartOutlined",
+          },
+          {
+            path: "dataBoard",
+            element: <DataBoard />,
+            name: "数据面板",
             icon: "LineChartOutlined",
           },
           {
