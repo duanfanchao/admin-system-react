@@ -2,6 +2,19 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
+// 添加这个自定义插件
+class DisableCssOutputPlugin {
+    apply(compiler) {
+        compiler.hooks.emit.tap('DisableCssOutput', (compilation) => {
+            Object.keys(compilation.assets).forEach((asset) => {
+                if (asset.endsWith('.css') || asset.endsWith('.min.css')) {
+                    delete compilation.assets[asset];
+                }
+            });
+        });
+    }
+}
+
 module.exports = (env, argv) => {
     const isProduction = argv.mode === 'production';
     return {
@@ -40,6 +53,7 @@ module.exports = (env, argv) => {
                 template: './public/index.html',
             }),
             new Dotenv(),
+            new DisableCssOutputPlugin(),
         ],
         resolve: {
             extensions: ['.js', '.jsx'], // 自动解析扩展名

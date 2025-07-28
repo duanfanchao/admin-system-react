@@ -1,0 +1,24 @@
+.infomation-statistics {
+  height: 100%;
+  width: 100%;
+  display: flex;
+}
+
+.infomation-statistics .tree-search {
+  width: 240px;
+  height: 100%;
+  margin-right: 16px;
+}
+
+.infomation-statistics .tree-search .tree-style {
+  height: auto;
+  max-height: calc(100% - 40px);
+  width: 100%;
+  overflow: auto;
+}
+
+.infomation-statistics .right-content {
+  flex: 1;
+  height: 100%;
+  background-color: #f0f2f5;
+}

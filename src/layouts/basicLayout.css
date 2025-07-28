@@ -23,7 +23,7 @@
 
 .ant-layout .content_div {
   height: calc(100% - 54px);
-  padding: 24px;
+  padding: 16px;
   overflow: auto;
 }
 
