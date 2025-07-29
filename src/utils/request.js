@@ -86,13 +86,13 @@ service.interceptors.response.use(
 
 // 登录超时处理
 function handleLoginTimeout() {
-    // clearToken();
+    clearToken();
     // 使用setTimeout避免阻塞当前请求
-    // setTimeout(() => {
-    //     if (window.location.pathname !== '/login') {
-    //         window.location.replace(`/login?from=${encodeURIComponent(window.location.pathname)}`);
-    //     }
-    // }, 0);
+    setTimeout(() => {
+        if (window.location.pathname !== '/login') {
+            window.location.replace(`/login?from=${encodeURIComponent(window.location.pathname)}`);
+        }
+    }, 0);
 }
 
 /**
